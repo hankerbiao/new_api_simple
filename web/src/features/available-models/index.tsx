@@ -46,11 +46,20 @@ import {
 } from '@/components/ui/empty'
 import { Input } from '@/components/ui/input'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getUserModels } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
 import { buildApiExamples, normalizeAvailableModels } from './lib/examples'
+import { REQUEST_PARAMETERS } from './lib/request-parameters'
 
 const EXAMPLE_TABS = [
   { id: 'curl', label: 'cURL' },
@@ -311,6 +320,63 @@ export function AvailableModels() {
                   <CodeBlockCopyButton />
                 </CodeBlock>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className='min-w-0 lg:col-span-2'>
+            <CardHeader className='border-b'>
+              <CardTitle>{t('Supported request parameters')}</CardTitle>
+              <CardDescription>
+                {t(
+                  'These parameters apply to the OpenAI-compatible chat endpoint. Support may vary by model and upstream provider.'
+                )}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className='p-0'>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>{t('Parameter')}</TableHead>
+                    <TableHead>{t('Type')}</TableHead>
+                    <TableHead>{t('Support scope')}</TableHead>
+                    <TableHead>{t('Description')}</TableHead>
+                    <TableHead>{t('Default / range')}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {REQUEST_PARAMETERS.map((parameter) => (
+                    <TableRow key={parameter.name}>
+                      <TableCell className='font-mono font-medium'>
+                        {parameter.name}
+                      </TableCell>
+                      <TableCell className='font-mono text-xs'>
+                        {parameter.type}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant={
+                            parameter.availability === 'common'
+                              ? 'secondary'
+                              : 'outline'
+                          }
+                        >
+                          {t(
+                            parameter.availability === 'common'
+                              ? 'Common'
+                              : 'Model-dependent'
+                          )}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className='min-w-64 whitespace-normal'>
+                        {t(parameter.descriptionKey)}
+                      </TableCell>
+                      <TableCell className='text-muted-foreground whitespace-normal'>
+                        {parameter.details ? t(parameter.details) : '-'}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </CardContent>
           </Card>
         </div>
