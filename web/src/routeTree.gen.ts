@@ -14,6 +14,7 @@ import { Route as authRouteRouteImport } from './routes/(auth)/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as UserAgreementRouteImport } from './routes/user-agreement'
+import { Route as authAdminSignInRouteImport } from './routes/(auth)/admin-sign-in'
 import { Route as authForgotPasswordRouteImport } from './routes/(auth)/forgot-password'
 import { Route as authOauthRouteImport } from './routes/(auth)/oauth'
 import { Route as authOtpRouteImport } from './routes/(auth)/otp'
@@ -34,6 +35,7 @@ import { Route as PricingIndexRouteImport } from './routes/pricing/index'
 import { Route as RankingsIndexRouteImport } from './routes/rankings/index'
 import { Route as SetupIndexRouteImport } from './routes/setup/index'
 import { Route as authUserResetRouteImport } from './routes/(auth)/user/reset'
+import { Route as AuthenticatedAvailableModelsIndexRouteImport } from './routes/_authenticated/available-models/index'
 import { Route as AuthenticatedChannelsIndexRouteImport } from './routes/_authenticated/channels/index'
 import { Route as AuthenticatedChatChatIdRouteImport } from './routes/_authenticated/chat/$chatId'
 import { Route as AuthenticatedDashboardIndexRouteImport } from './routes/_authenticated/dashboard/index'
@@ -90,6 +92,11 @@ const UserAgreementRoute = UserAgreementRouteImport.update({
   id: '/user-agreement',
   path: '/user-agreement',
   getParentRoute: () => rootRouteImport,
+} as any)
+const authAdminSignInRoute = authAdminSignInRouteImport.update({
+  id: '/admin-sign-in',
+  path: '/admin-sign-in',
+  getParentRoute: () => authRouteRoute,
 } as any)
 const authForgotPasswordRoute = authForgotPasswordRouteImport.update({
   id: '/forgot-password',
@@ -192,6 +199,12 @@ const authUserResetRoute = authUserResetRouteImport.update({
   path: '/user/reset',
   getParentRoute: () => authRouteRoute,
 } as any)
+const AuthenticatedAvailableModelsIndexRoute =
+  AuthenticatedAvailableModelsIndexRouteImport.update({
+    id: '/available-models/',
+    path: '/available-models/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedChannelsIndexRoute =
   AuthenticatedChannelsIndexRouteImport.update({
     id: '/channels/',
@@ -392,6 +405,7 @@ export interface FileRoutesByFullPath {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/user-agreement': typeof UserAgreementRoute
   '/system-settings': typeof AuthenticatedSystemSettingsRouteRouteWithChildren
+  '/admin-sign-in': typeof authAdminSignInRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/oauth': typeof authOauthRoute
   '/otp': typeof authOtpRoute
@@ -416,6 +430,7 @@ export interface FileRoutesByFullPath {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/models/$section': typeof AuthenticatedModelsSectionRoute
   '/usage-logs/$section': typeof AuthenticatedUsageLogsSectionRoute
+  '/available-models/': typeof AuthenticatedAvailableModelsIndexRoute
   '/channels/': typeof AuthenticatedChannelsIndexRoute
   '/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/keys/': typeof AuthenticatedKeysIndexRoute
@@ -449,6 +464,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/user-agreement': typeof UserAgreementRoute
+  '/admin-sign-in': typeof authAdminSignInRoute
   '/forgot-password': typeof authForgotPasswordRoute
   '/oauth': typeof authOauthRoute
   '/otp': typeof authOtpRoute
@@ -473,6 +489,7 @@ export interface FileRoutesByTo {
   '/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/models/$section': typeof AuthenticatedModelsSectionRoute
   '/usage-logs/$section': typeof AuthenticatedUsageLogsSectionRoute
+  '/available-models': typeof AuthenticatedAvailableModelsIndexRoute
   '/channels': typeof AuthenticatedChannelsIndexRoute
   '/dashboard': typeof AuthenticatedDashboardIndexRoute
   '/keys': typeof AuthenticatedKeysIndexRoute
@@ -510,6 +527,7 @@ export interface FileRoutesById {
   '/privacy-policy': typeof PrivacyPolicyRoute
   '/user-agreement': typeof UserAgreementRoute
   '/_authenticated/system-settings': typeof AuthenticatedSystemSettingsRouteRouteWithChildren
+  '/(auth)/admin-sign-in': typeof authAdminSignInRoute
   '/(auth)/forgot-password': typeof authForgotPasswordRoute
   '/(auth)/oauth': typeof authOauthRoute
   '/(auth)/otp': typeof authOtpRoute
@@ -534,6 +552,7 @@ export interface FileRoutesById {
   '/_authenticated/errors/$error': typeof AuthenticatedErrorsErrorRoute
   '/_authenticated/models/$section': typeof AuthenticatedModelsSectionRoute
   '/_authenticated/usage-logs/$section': typeof AuthenticatedUsageLogsSectionRoute
+  '/_authenticated/available-models/': typeof AuthenticatedAvailableModelsIndexRoute
   '/_authenticated/channels/': typeof AuthenticatedChannelsIndexRoute
   '/_authenticated/dashboard/': typeof AuthenticatedDashboardIndexRoute
   '/_authenticated/keys/': typeof AuthenticatedKeysIndexRoute
@@ -570,6 +589,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/user-agreement'
     | '/system-settings'
+    | '/admin-sign-in'
     | '/forgot-password'
     | '/oauth'
     | '/otp'
@@ -594,6 +614,7 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/models/$section'
     | '/usage-logs/$section'
+    | '/available-models/'
     | '/channels/'
     | '/dashboard/'
     | '/keys/'
@@ -627,6 +648,7 @@ export interface FileRouteTypes {
     | '/'
     | '/privacy-policy'
     | '/user-agreement'
+    | '/admin-sign-in'
     | '/forgot-password'
     | '/oauth'
     | '/otp'
@@ -651,6 +673,7 @@ export interface FileRouteTypes {
     | '/errors/$error'
     | '/models/$section'
     | '/usage-logs/$section'
+    | '/available-models'
     | '/channels'
     | '/dashboard'
     | '/keys'
@@ -687,6 +710,7 @@ export interface FileRouteTypes {
     | '/privacy-policy'
     | '/user-agreement'
     | '/_authenticated/system-settings'
+    | '/(auth)/admin-sign-in'
     | '/(auth)/forgot-password'
     | '/(auth)/oauth'
     | '/(auth)/otp'
@@ -711,6 +735,7 @@ export interface FileRouteTypes {
     | '/_authenticated/errors/$error'
     | '/_authenticated/models/$section'
     | '/_authenticated/usage-logs/$section'
+    | '/_authenticated/available-models/'
     | '/_authenticated/channels/'
     | '/_authenticated/dashboard/'
     | '/_authenticated/keys/'
@@ -796,6 +821,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/user-agreement'
       preLoaderRoute: typeof UserAgreementRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/(auth)/admin-sign-in': {
+      id: '/(auth)/admin-sign-in'
+      path: '/admin-sign-in'
+      fullPath: '/admin-sign-in'
+      preLoaderRoute: typeof authAdminSignInRouteImport
+      parentRoute: typeof authRouteRoute
     }
     '/(auth)/forgot-password': {
       id: '/(auth)/forgot-password'
@@ -936,6 +968,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/user/reset'
       preLoaderRoute: typeof authUserResetRouteImport
       parentRoute: typeof authRouteRoute
+    }
+    '/_authenticated/available-models/': {
+      id: '/_authenticated/available-models/'
+      path: '/available-models'
+      fullPath: '/available-models/'
+      preLoaderRoute: typeof AuthenticatedAvailableModelsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/channels/': {
       id: '/_authenticated/channels/'
@@ -1172,6 +1211,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface authRouteRouteChildren {
+  authAdminSignInRoute: typeof authAdminSignInRoute
   authForgotPasswordRoute: typeof authForgotPasswordRoute
   authOauthRoute: typeof authOauthRoute
   authOtpRoute: typeof authOtpRoute
@@ -1183,6 +1223,7 @@ interface authRouteRouteChildren {
 }
 
 const authRouteRouteChildren: authRouteRouteChildren = {
+  authAdminSignInRoute: authAdminSignInRoute,
   authForgotPasswordRoute: authForgotPasswordRoute,
   authOauthRoute: authOauthRoute,
   authOtpRoute: authOtpRoute,
@@ -1262,6 +1303,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedErrorsErrorRoute: typeof AuthenticatedErrorsErrorRoute
   AuthenticatedModelsSectionRoute: typeof AuthenticatedModelsSectionRoute
   AuthenticatedUsageLogsSectionRoute: typeof AuthenticatedUsageLogsSectionRoute
+  AuthenticatedAvailableModelsIndexRoute: typeof AuthenticatedAvailableModelsIndexRoute
   AuthenticatedChannelsIndexRoute: typeof AuthenticatedChannelsIndexRoute
   AuthenticatedDashboardIndexRoute: typeof AuthenticatedDashboardIndexRoute
   AuthenticatedKeysIndexRoute: typeof AuthenticatedKeysIndexRoute
@@ -1285,6 +1327,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedErrorsErrorRoute: AuthenticatedErrorsErrorRoute,
   AuthenticatedModelsSectionRoute: AuthenticatedModelsSectionRoute,
   AuthenticatedUsageLogsSectionRoute: AuthenticatedUsageLogsSectionRoute,
+  AuthenticatedAvailableModelsIndexRoute:
+    AuthenticatedAvailableModelsIndexRoute,
   AuthenticatedChannelsIndexRoute: AuthenticatedChannelsIndexRoute,
   AuthenticatedDashboardIndexRoute: AuthenticatedDashboardIndexRoute,
   AuthenticatedKeysIndexRoute: AuthenticatedKeysIndexRoute,

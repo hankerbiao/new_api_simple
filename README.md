@@ -53,6 +53,32 @@
 
 </div>
 
+## At a glance
+
+New API is a self-hosted AI API gateway for teams that need one reliable control
+plane for multiple providers, models, credentials, usage records, and billing.
+
+| Start here | Purpose |
+| --- | --- |
+| [Quick Start](#-quick-start) | Run the gateway with Docker Compose |
+| [Key Features](#-key-features) | Review supported workflows and capabilities |
+| [Deployment](#-deployment) | Configure production deployments and databases |
+| [Documentation](#-documentation) | Read the complete installation and API guides |
+
+### Repository layout
+
+```text
+controller/  HTTP request handlers
+service/     Business logic and orchestration
+model/       Database models and persistence
+relay/       Provider adapters and protocol conversion
+web/         React administration console
+```
+
+The gateway supports SQLite, MySQL, and PostgreSQL, with Redis available for
+distributed caching and rate limiting. The web console is built with React,
+TypeScript, and a responsive component system.
+
 ## 📝 Project Description
 
 > [!IMPORTANT]

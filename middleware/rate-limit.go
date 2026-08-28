@@ -178,6 +178,24 @@ func CriticalRateLimit() func(c *gin.Context) {
 	return defNext
 }
 
+// AuthRefreshRateLimit isolates background session refresh traffic from login
+// and other critical endpoints that share the same client IP.
+func AuthRefreshRateLimit() func(c *gin.Context) {
+	if common.CriticalRateLimitEnable {
+		return rateLimitFactory(common.CriticalRateLimitNum, common.CriticalRateLimitDuration, "AR")
+	}
+	return defNext
+}
+
+// OneLoginRateLimit isolates the browser redirect and callback flow from
+// background session refresh traffic.
+func OneLoginRateLimit() func(c *gin.Context) {
+	if common.CriticalRateLimitEnable {
+		return rateLimitFactory(common.CriticalRateLimitNum, common.CriticalRateLimitDuration, "OL")
+	}
+	return defNext
+}
+
 func UserCriticalRateLimit(scope string) func(c *gin.Context) {
 	if !common.CriticalRateLimitEnable {
 		return defNext

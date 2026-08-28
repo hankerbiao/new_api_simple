@@ -16,8 +16,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
-import { ShieldCheck, KeyRound, Loader2 } from 'lucide-react'
-import { useMemo } from 'react'
+import { ShieldCheck, Loader2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
 import { Dialog } from '@/components/dialog'
@@ -53,12 +52,7 @@ export function SecureVerificationDialog({
   onMethodChange,
 }: SecureVerificationDialogProps) {
   const { t } = useTranslation()
-  const availableTabs: VerificationMethod[] = useMemo(() => {
-    const tabs: VerificationMethod[] = []
-    if (methods.has2FA) tabs.push('2fa')
-    if (methods.hasPasskey && methods.passkeySupported) tabs.push('passkey')
-    return tabs
-  }, [methods])
+  const availableTabs: VerificationMethod[] = methods.has2FA ? ['2fa'] : []
 
   const activeMethod =
     state.method ?? (availableTabs.length > 0 ? availableTabs[0] : null)
@@ -73,7 +67,7 @@ export function SecureVerificationDialog({
     state.description ??
     (availableTabs.length
       ? 'Confirm your identity before accessing this sensitive action.'
-      : 'Enable Two-factor Authentication or Passkey in your profile settings to continue.')
+      : 'Enable Two-factor Authentication in your profile settings to continue.')
 
   const handleVerify = () => {
     if (!activeMethod) return
@@ -132,7 +126,7 @@ export function SecureVerificationDialog({
           </div>
           <p className='text-muted-foreground text-sm'>
             {t(
-              'Enable Two-factor Authentication or Passkey in your profile to unlock sensitive operations.'
+              'Enable Two-factor Authentication in your profile to unlock sensitive operations.'
             )}
           </p>
         </div>
@@ -145,9 +139,6 @@ export function SecureVerificationDialog({
           <TabsList>
             {methods.has2FA && (
               <TabsTrigger value='2fa'>{t('Authenticator code')}</TabsTrigger>
-            )}
-            {methods.hasPasskey && methods.passkeySupported && (
-              <TabsTrigger value='passkey'>{t('Passkey')}</TabsTrigger>
             )}
           </TabsList>
 
@@ -172,29 +163,6 @@ export function SecureVerificationDialog({
                 }
               }}
             />
-          </TabsContent>
-
-          <TabsContent value='passkey' className='space-y-4'>
-            <div className='bg-muted/50 flex items-center justify-center rounded-lg p-4'>
-              <div className='text-muted-foreground flex items-center gap-3'>
-                <KeyRound className='text-primary h-6 w-6' />
-                <div className='text-left text-sm'>
-                  <p className='text-foreground font-medium'>
-                    {t('Use your Passkey')}
-                  </p>
-                  <p>
-                    {t(
-                      'We will prompt your device to confirm using biometrics or your hardware key.'
-                    )}
-                  </p>
-                </div>
-              </div>
-            </div>
-            {!methods.passkeySupported && (
-              <p className='text-destructive text-sm'>
-                {t('This device does not support Passkey verification.')}
-              </p>
-            )}
           </TabsContent>
         </Tabs>
       )}

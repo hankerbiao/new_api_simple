@@ -22,11 +22,11 @@ const legacyConsoleRoutes: Record<string, string> = {
   '/console': '/dashboard',
   '/console/models': '/models',
   '/console/deployment': '/models/deployments',
-  '/console/subscription': '/subscriptions',
+  '/console/subscription': '/dashboard/overview',
   '/console/channel': '/channels',
   '/console/token': '/keys',
-  '/console/playground': '/playground',
-  '/console/redemption': '/redemption-codes',
+  '/console/playground': '/dashboard/overview',
+  '/console/redemption': '/dashboard/overview',
   '/console/user': '/users',
   '/console/personal': '/profile',
   '/console/log': '/usage-logs',
@@ -39,7 +39,7 @@ const legacySettingsTabs: Record<string, string> = {
   dashboard: '/system-settings/content/dashboard',
   chats: '/system-settings/content/chat',
   drawing: '/system-settings/content/drawing',
-  payment: '/system-settings/billing/payment',
+  payment: '/dashboard/overview',
   ratio: '/system-settings/billing/model-pricing',
   ratelimit: '/system-settings/security/rate-limit',
   models: '/system-settings/models/global',
@@ -79,7 +79,7 @@ export function resolveLegacyRoute(rawHref: string): string | null {
     return buildTargetHref('/403', source)
   }
   if (pathname === '/console/topup') {
-    return buildTargetHref('/wallet', source)
+    return buildTargetHref('/dashboard/overview', source)
   }
   if (pathname === '/console/setting') {
     const tab = source.searchParams.get('tab') ?? ''
@@ -87,11 +87,10 @@ export function resolveLegacyRoute(rawHref: string): string | null {
     return buildTargetHref(target, source)
   }
   if (pathname === '/console/chat') {
-    return buildTargetHref('/dashboard', source)
+    return buildTargetHref('/dashboard/overview', source)
   }
   if (pathname.startsWith('/console/chat/')) {
-    const chatID = pathname.slice('/console/chat/'.length)
-    return buildTargetHref(chatID ? `/chat/${chatID}` : '/dashboard', source)
+    return buildTargetHref('/dashboard/overview', source)
   }
 
   const target = legacyConsoleRoutes[pathname]

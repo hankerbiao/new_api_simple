@@ -26,7 +26,6 @@ export type HeaderNavModulesConfig = {
   console: boolean
   pricing: HeaderNavAccessConfig
   rankings: HeaderNavAccessConfig
-  docs: boolean
   about: boolean
   [key: string]: boolean | HeaderNavAccessConfig
 }
@@ -49,16 +48,10 @@ export const HEADER_NAV_DEFAULT: HeaderNavModulesConfig = {
     enabled: true,
     requireAuth: false,
   },
-  docs: true,
   about: true,
 }
 
 export const SIDEBAR_MODULES_DEFAULT: SidebarModulesAdminConfig = {
-  chat: {
-    enabled: true,
-    playground: true,
-    chat: true,
-  },
   console: {
     enabled: true,
     detail: true,
@@ -69,17 +62,14 @@ export const SIDEBAR_MODULES_DEFAULT: SidebarModulesAdminConfig = {
   },
   personal: {
     enabled: true,
-    topup: true,
     personal: true,
   },
   admin: {
     enabled: true,
     channel: true,
     models: true,
-    redemption: true,
     user: true,
     setting: true,
-    subscription: true,
   },
 }
 

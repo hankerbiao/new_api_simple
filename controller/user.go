@@ -38,7 +38,15 @@ var (
 )
 
 func Login(c *gin.Context) {
-	if !common.PasswordLoginEnabled {
+	loginWithPassword(c, false)
+}
+
+func AdminLogin(c *gin.Context) {
+	loginWithPassword(c, true)
+}
+
+func loginWithPassword(c *gin.Context, requireAdministrator bool) {
+	if !requireAdministrator && !common.PasswordLoginEnabled {
 		common.ApiErrorI18n(c, i18n.MsgUserPasswordLoginDisabled)
 		return
 	}
@@ -71,6 +79,10 @@ func Login(c *gin.Context) {
 		}
 		return
 	}
+	if requireAdministrator && user.Role < common.RoleAdminUser {
+		common.ApiErrorI18n(c, i18n.MsgUserUsernameOrPasswordError)
+		return
+	}
 
 	// 检查是否启用2FA
 	twoFAEnabled, err := model.IsTwoFAEnabled(user.Id)
@@ -81,7 +93,10 @@ func Login(c *gin.Context) {
 	}
 	if twoFAEnabled {
 		expiresAt := time.Now().Add(5 * time.Minute)
-		payload, err := common.Marshal(twoFALoginFlowPayload{AuthVersion: user.AuthVersion})
+		payload, err := common.Marshal(twoFALoginFlowPayload{
+			AuthVersion:          user.AuthVersion,
+			RequireAdministrator: requireAdministrator,
+		})
 		if err != nil {
 			common.ApiError(c, err)
 			return
@@ -117,6 +132,8 @@ func loginMethodFromContext(c *gin.Context) string {
 	switch c.FullPath() {
 	case "/api/user/login":
 		return "password"
+	case "/api/user/admin/login":
+		return "admin_password"
 	case "/api/user/login/2fa":
 		return "2fa"
 	case "/api/user/passkey/login/finish":
@@ -130,6 +147,8 @@ func loginMethodFromContext(c *gin.Context) string {
 			return "oauth:" + provider
 		}
 		return "oauth"
+	case "/auth/one-login/callback":
+		return "one_login"
 	default:
 		return "unknown"
 	}

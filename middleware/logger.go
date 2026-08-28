@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"fmt"
+	"net/url"
 
 	"github.com/QuantumNous/new-api/common"
 	"github.com/gin-gonic/gin"
@@ -34,7 +35,21 @@ func SetUpLogger(server *gin.Engine) {
 			param.Latency,
 			param.ClientIP,
 			param.Method,
-			param.Path,
+			sanitizeLogPath(param.Path),
 		)
 	}))
+}
+
+func sanitizeLogPath(path string) string {
+	parsed, err := url.ParseRequestURI(path)
+	if err != nil {
+		return path
+	}
+	query := parsed.Query()
+	if !query.Has("payload") {
+		return path
+	}
+	query.Set("payload", "[REDACTED]")
+	parsed.RawQuery = query.Encode()
+	return parsed.RequestURI()
 }

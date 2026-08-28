@@ -16,6 +16,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 For commercial licensing, please contact support@quantumnous.com
 */
+import { BrandMark } from '@/components/brand-mark'
 import { cn } from '@/lib/utils'
 
 interface HeaderLogoProps {
@@ -37,6 +38,10 @@ export function HeaderLogo({
   logoLoaded,
   className,
 }: HeaderLogoProps) {
+  if (src === '/logo.png') {
+    return <BrandMark className={cn('size-6', className)} />
+  }
+
   return (
     <img
       src={src}

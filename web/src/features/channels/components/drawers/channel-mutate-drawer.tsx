@@ -1387,10 +1387,10 @@ export function ChannelMutateDrawer({
     try {
       await withVerification(fetchChannelKey, {
         scope: 'channel.key.read',
-        preferredMethod: 'passkey',
+        preferredMethod: '2fa',
         title: t('Verify to view channel key'),
         description: t(
-          'Use Passkey or 2FA to confirm your identity before revealing this channel key.'
+          'Use 2FA to confirm your identity before revealing this channel key.'
         ),
       })
     } catch (error) {

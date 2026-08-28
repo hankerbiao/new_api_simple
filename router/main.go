@@ -14,6 +14,7 @@ import (
 
 func SetRouter(router *gin.Engine, assets WebAssets) {
 	SetApiRouter(router)
+	SetOneLoginRouter(router)
 	SetDashboardRouter(router)
 	SetRelayRouter(router)
 	SetVideoRouter(router)

@@ -28,17 +28,17 @@ describe('legacy frontend route migration', () => {
       '/console': '/dashboard',
       '/console/models': '/models',
       '/console/deployment': '/models/deployments',
-      '/console/subscription': '/subscriptions',
+      '/console/subscription': '/dashboard/overview',
       '/console/channel': '/channels',
       '/console/token': '/keys',
-      '/console/playground': '/playground',
-      '/console/redemption': '/redemption-codes',
+      '/console/playground': '/dashboard/overview',
+      '/console/redemption': '/dashboard/overview',
       '/console/user': '/users',
       '/console/personal': '/profile',
       '/console/log': '/usage-logs',
       '/console/midjourney': '/usage-logs/drawing',
       '/console/task': '/usage-logs/task',
-      '/console/chat/42': '/chat/42',
+      '/console/chat/42': '/dashboard/overview',
     }
 
     for (const [source, target] of Object.entries(routes)) {
@@ -51,7 +51,7 @@ describe('legacy frontend route migration', () => {
       '/sign-in?redirect=%2Fkeys#continue'
     )
     expect(resolveLegacyRoute('/console/topup?source=email#orders')).toBe(
-      '/wallet?source=email#orders'
+      '/dashboard/overview?source=email#orders'
     )
   })
 
@@ -61,7 +61,7 @@ describe('legacy frontend route migration', () => {
       dashboard: '/system-settings/content/dashboard',
       chats: '/system-settings/content/chat',
       drawing: '/system-settings/content/drawing',
-      payment: '/system-settings/billing/payment',
+      payment: '/dashboard/overview',
       ratio: '/system-settings/billing/model-pricing',
       ratelimit: '/system-settings/security/rate-limit',
       models: '/system-settings/models/global',

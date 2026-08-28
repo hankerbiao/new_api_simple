@@ -87,15 +87,13 @@ export function useSecureVerification(
       const { preferredMethod, scope, title, description } = config
       const availableMethods = await fetchVerificationMethods()
 
-      if (!availableMethods.has2FA && !availableMethods.hasPasskey) {
+      if (!availableMethods.has2FA) {
         toast.error(
-          i18next.t(
-            'Please enable Two-factor Authentication or Passkey before proceeding'
-          )
+          i18next.t('Please enable Two-factor Authentication before proceeding')
         )
         onError?.(
           new Error(
-            'No verification methods available. Enable 2FA or Passkey to continue.'
+            'No verification methods available. Enable 2FA to continue.'
           )
         )
         return false
@@ -103,19 +101,13 @@ export function useSecureVerification(
 
       let defaultMethod: VerificationMethod | null = preferredMethod ?? null
       if (
-        (defaultMethod === 'passkey' &&
-          (!availableMethods.hasPasskey ||
-            !availableMethods.passkeySupported)) ||
+        defaultMethod === 'passkey' ||
         (defaultMethod === '2fa' && !availableMethods.has2FA)
       ) {
         defaultMethod = null
       }
       if (!defaultMethod) {
-        if (availableMethods.hasPasskey && availableMethods.passkeySupported) {
-          defaultMethod = 'passkey'
-        } else if (availableMethods.has2FA) {
-          defaultMethod = '2fa'
-        }
+        defaultMethod = '2fa'
       }
 
       setState((prev) => ({
@@ -220,7 +212,7 @@ export function useSecureVerification(
     (method: VerificationMethod) => {
       if (method === '2fa') return methods.has2FA
       if (method === 'passkey') {
-        return methods.hasPasskey && methods.passkeySupported
+        return false
       }
       return false
     },
@@ -228,7 +220,6 @@ export function useSecureVerification(
   )
 
   const recommendedMethod = useMemo<VerificationMethod | null>(() => {
-    if (methods.hasPasskey && methods.passkeySupported) return 'passkey'
     if (methods.has2FA) return '2fa'
     return null
   }, [methods])
@@ -248,7 +239,7 @@ export function useSecureVerification(
     fetchVerificationMethods,
     canUseMethod,
     recommendedMethod,
-    hasAnyMethod: methods.has2FA || methods.hasPasskey,
+    hasAnyMethod: methods.has2FA,
     isLoading: state.loading,
     currentMethod: state.method,
     code: state.code,

@@ -65,10 +65,6 @@ export function SidebarModulesSection({
   const updateOption = useUpdateOption()
 
   const sectionMeta: Record<string, { title: string; description: string }> = {
-    chat: {
-      title: t('Chat area'),
-      description: t('Playground experiments and live conversations.'),
-    },
     console: {
       title: t('Console area'),
       description: t('Dashboards, tokens, and usage analytics.'),
@@ -120,10 +116,6 @@ export function SidebarModulesSection({
       },
     },
     personal: {
-      topup: {
-        title: t('Wallet'),
-        description: t('Top up balance and view billing history.'),
-      },
       personal: {
         title: t('Profile'),
         description: t('Personal settings and profile management.'),
@@ -138,10 +130,6 @@ export function SidebarModulesSection({
         title: t('Models'),
         description: t('Manage catalog visibility and pricing.'),
       },
-      redemption: {
-        title: t('Redeem codes'),
-        description: t('Create and review invite or credit codes.'),
-      },
       user: {
         title: t('Users'),
         description: t('Administer user accounts and roles.'),
@@ -149,10 +137,6 @@ export function SidebarModulesSection({
       setting: {
         title: t('System settings'),
         description: t('Advanced platform configuration.'),
-      },
-      subscription: {
-        title: t('Subscription Management'),
-        description: t('Manage subscription plans and pricing.'),
       },
     },
   }
@@ -182,7 +166,9 @@ export function SidebarModulesSection({
     form.reset(SIDEBAR_MODULES_DEFAULT)
   }
 
-  const sections = Object.entries(config)
+  const sections = Object.entries(config).filter(([sectionKey]) =>
+    Object.hasOwn(SIDEBAR_MODULES_DEFAULT, sectionKey)
+  )
 
   return (
     <SettingsSection title={t('Sidebar modules')}>
@@ -201,7 +187,9 @@ export function SidebarModulesSection({
               description: t('Custom sidebar section'),
             }
             const modules = Object.entries(sectionConfig).filter(
-              ([moduleKey]) => moduleKey !== 'enabled'
+              ([moduleKey]) =>
+                moduleKey !== 'enabled' &&
+                Object.hasOwn(SIDEBAR_MODULES_DEFAULT[sectionKey], moduleKey)
             )
 
             return (

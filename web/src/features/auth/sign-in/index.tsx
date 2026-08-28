@@ -23,36 +23,54 @@ import { useStatus } from '@/hooks/use-status'
 
 import { AuthLayout } from '../auth-layout'
 import { TermsFooter } from '../components/terms-footer'
-import { UserAuthForm } from './components/user-auth-form'
+import { OneLoginForm } from './components/one-login-form'
 
 export function SignIn() {
   const { t } = useTranslation()
-  const { redirect } = useSearch({ from: '/(auth)/sign-in' })
+  const { redirect, one_login: oneLoginStatus } = useSearch({
+    from: '/(auth)/sign-in',
+  })
   const { status } = useStatus()
 
   return (
     <AuthLayout>
-      <div className='w-full space-y-8'>
-        <div className='space-y-2'>
-          <h2 className='text-center text-2xl font-semibold tracking-tight sm:text-left'>
-            {t('Sign in')}
-          </h2>
-          {!status?.self_use_mode_enabled &&
-            status?.register_enabled !== false && (
-              <p className='text-muted-foreground text-left text-sm sm:text-base'>
-                {t("Don't have an account?")}{' '}
-                <Link
-                  to='/sign-up'
-                  className='hover:text-primary font-medium underline underline-offset-4'
-                >
-                  {t('Sign up')}
-                </Link>
-                .
-              </p>
-            )}
+      <div className='w-full space-y-7'>
+        <div className='space-y-2 text-center'>
+          <p className='text-muted-foreground text-xs font-medium uppercase'>
+            {t('Secure access')}
+          </p>
+          <h2 className='text-2xl font-semibold sm:text-3xl'>{t('Sign in')}</h2>
+          <p className='text-muted-foreground text-sm'>
+            {t('Sign in to continue to your workspace')}
+          </p>
         </div>
 
-        <UserAuthForm redirectTo={redirect} />
+        {oneLoginStatus && (
+          <p className='text-destructive text-center text-sm' role='alert'>
+            {oneLoginStatus === 'unavailable'
+              ? t(
+                  'ONE Login is unavailable. Please contact your administrator.'
+                )
+              : t('ONE Login failed. Please try again.')}
+          </p>
+        )}
+
+        <OneLoginForm redirectTo={redirect} />
+
+        <div className='flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm'>
+          <Link
+            to='/forgot-password'
+            className='text-muted-foreground hover:underline'
+          >
+            {t('Forgot password')}
+          </Link>
+          <Link
+            to='/admin-sign-in'
+            className='text-muted-foreground hover:underline'
+          >
+            {t('Administrator login')}
+          </Link>
+        </div>
 
         <TermsFooter
           variant='sign-in'

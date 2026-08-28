@@ -25,7 +25,8 @@ type Verify2FARequest struct {
 }
 
 type twoFALoginFlowPayload struct {
-	AuthVersion int64 `json:"auth_version"`
+	AuthVersion          int64 `json:"auth_version"`
+	RequireAdministrator bool  `json:"require_administrator,omitempty"`
 }
 
 // Setup2FAResponse 设置2FA响应结构
@@ -460,6 +461,13 @@ func Verify2FALogin(c *gin.Context) {
 	}
 	var flowPayload twoFALoginFlowPayload
 	if err := common.UnmarshalJsonStr(flow.Payload, &flowPayload); err != nil || flowPayload.AuthVersion <= 0 || flowPayload.AuthVersion != user.AuthVersion {
+		c.JSON(http.StatusOK, gin.H{
+			"success": false,
+			"message": "会话已过期，请重新登录",
+		})
+		return
+	}
+	if flowPayload.RequireAdministrator && user.Role < common.RoleAdminUser {
 		c.JSON(http.StatusOK, gin.H{
 			"success": false,
 			"message": "会话已过期，请重新登录",
