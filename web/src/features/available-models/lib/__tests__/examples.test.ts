@@ -18,7 +18,11 @@ For commercial licensing, please contact support@quantumnous.com
 */
 import { describe, expect, test } from 'vitest'
 
-import { buildApiExamples, normalizeAvailableModels } from '../examples'
+import {
+  buildApiExamples,
+  getApiExampleEndpoint,
+  normalizeAvailableModels,
+} from '../examples'
 
 describe('available model examples', () => {
   test('normalizes duplicate and blank model names for the user list', () => {
@@ -39,5 +43,43 @@ describe('available model examples', () => {
       expect(example.code).toContain('gateway.example.com')
       expect(example.code).toContain('sk-...')
     }
+  })
+
+  test('uses the embeddings endpoint and payload for embedding models', () => {
+    const endpoint = getApiExampleEndpoint(
+      'https://gateway.example.com/v1/chat/completions',
+      'embedding'
+    )
+    const examples = buildApiExamples(
+      'https://gateway.example.com/v1/chat/completions',
+      'embedding'
+    )
+
+    expect(endpoint).toEqual({
+      url: 'https://gateway.example.com/v1/embeddings',
+      requestType: 'embedding',
+    })
+    expect(examples[0]?.code).toContain('/v1/embeddings')
+    expect(examples[0]?.code).toContain('"input":["Text to embed"]')
+    expect(examples[1]?.code).toContain('client.embeddings.create')
+  })
+
+  test('uses the rerank endpoint and payload for rerank models', () => {
+    const endpoint = getApiExampleEndpoint(
+      'https://gateway.example.com/v1/chat/completions',
+      'reranker'
+    )
+    const examples = buildApiExamples(
+      'https://gateway.example.com/v1/chat/completions',
+      'reranker'
+    )
+
+    expect(endpoint).toEqual({
+      url: 'https://gateway.example.com/v1/rerank',
+      requestType: 'rerank',
+    })
+    expect(examples[0]?.code).toContain('/v1/rerank')
+    expect(examples[0]?.code).toContain('"documents"')
+    expect(examples[1]?.code).toContain('urlopen(request)')
   })
 })

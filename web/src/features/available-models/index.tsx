@@ -58,7 +58,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { getUserModels } from '@/lib/api'
 import { cn } from '@/lib/utils'
 
-import { buildApiExamples, normalizeAvailableModels } from './lib/examples'
+import {
+  buildApiExamples,
+  getApiExampleEndpoint,
+  normalizeAvailableModels,
+} from './lib/examples'
 import { REQUEST_PARAMETERS } from './lib/request-parameters'
 
 const EXAMPLE_TABS = [
@@ -96,6 +100,10 @@ export function AvailableModels() {
       ? 'https://your-gateway.example.com'
       : window.location.origin
   const chatEndpoint = `${gatewayBaseUrl}/v1/chat/completions`
+  const apiExampleEndpoint = getApiExampleEndpoint(
+    chatEndpoint,
+    activeModel || 'your-model'
+  )
   const examples = useMemo(
     () => buildApiExamples(chatEndpoint, activeModel || 'your-model'),
     [activeModel, chatEndpoint]
@@ -250,9 +258,9 @@ export function AvailableModels() {
                   </div>
                   <div
                     className='truncate font-mono text-sm'
-                    title={chatEndpoint}
+                    title={apiExampleEndpoint.url}
                   >
-                    /v1/chat/completions
+                    {apiExampleEndpoint.url.replace(gatewayBaseUrl, '')}
                   </div>
                 </div>
               </div>
