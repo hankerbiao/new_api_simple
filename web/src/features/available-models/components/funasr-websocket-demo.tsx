@@ -183,7 +183,7 @@ export function FunasrWebSocketDemo() {
         <Badge variant='outline'>{t('PCM16, 16 kHz, mono')}</Badge>
       </div>
 
-      <div className='grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(20rem,0.8fr)]'>
+      <div className='grid gap-4'>
         <div className='space-y-3'>
           <div className='flex flex-wrap gap-2'>
             <Button
