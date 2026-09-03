@@ -22,16 +22,15 @@ import { describe, expect, test } from 'vitest'
 import { FunasrWebSocketDemo } from '../funasr-websocket-demo'
 
 describe('FunASR WebSocket demo', () => {
-  test('shows the WebSocket endpoint and disabled stop control before recording starts', () => {
+  test('shows the speech recognition service description without test controls', () => {
     render(<FunasrWebSocketDemo />)
 
-    expect(screen.getByText('ws://10.17.150.235:10095')).toBeInTheDocument()
     expect(
-      screen.getByRole('button', { name: 'Start recognition' })
-    ).toBeEnabled()
-    expect(
-      screen.getByRole('button', { name: 'Stop recognition' })
-    ).toBeDisabled()
-    expect(screen.getByText('PCM16, 16 kHz, mono')).toBeInTheDocument()
+      screen.getByText(
+        'FunASR accepts a streaming PCM16 audio buffer and returns transcription text in each WebSocket message.'
+      )
+    ).toBeInTheDocument()
+    expect(screen.queryByRole('button')).not.toBeInTheDocument()
+    expect(screen.queryByText('ws://10.17.150.235:10095')).not.toBeInTheDocument()
   })
 })
