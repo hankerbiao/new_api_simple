@@ -63,6 +63,7 @@ import {
   getApiExampleEndpoint,
   normalizeAvailableModels,
 } from './lib/examples'
+import { FunasrWebSocketDemo } from './components/funasr-websocket-demo'
 import { REQUEST_PARAMETERS } from './lib/request-parameters'
 
 const EXAMPLE_TABS = [
@@ -328,6 +329,28 @@ export function AvailableModels() {
                   <CodeBlockCopyButton />
                 </CodeBlock>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className='min-w-0 lg:col-span-2'>
+            <CardHeader className='border-b'>
+              <div className='flex flex-wrap items-start justify-between gap-3'>
+                <div className='min-w-0'>
+                  <CardTitle>{t('FunASR Speech Recognition')}</CardTitle>
+                  <CardDescription>
+                    {t(
+                      'Real-time speech recognition with streaming transcription over WebSocket.'
+                    )}
+                  </CardDescription>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Badge variant='secondary'>{t('WebSocket')}</Badge>
+                  <Badge variant='outline'>{t('Online')}</Badge>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className='pt-6'>
+              <FunasrWebSocketDemo />
             </CardContent>
           </Card>
 
