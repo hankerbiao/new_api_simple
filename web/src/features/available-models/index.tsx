@@ -228,34 +228,6 @@ export function AvailableModels() {
             </CardHeader>
             <CardContent className='min-h-0 flex-1 p-2'>
               {modelListContent}
-              <div className='mt-3 border-t pt-3'>
-                <div className='flex items-start justify-between gap-2 px-2 pb-2'>
-                  <div className='min-w-0'>
-                    <div className='text-sm font-medium'>
-                      {t('Models for your account')}
-                    </div>
-                    <div className='text-muted-foreground text-xs'>
-                      {t('Only models available to your account are shown.')}
-                    </div>
-                  </div>
-                  <Badge variant='secondary' className='shrink-0'>
-                    {t('{{count}} models', { count: 1 })}
-                  </Badge>
-                </div>
-                <details className='group rounded-lg border'>
-                  <summary className='hover:bg-muted/70 flex cursor-pointer list-none items-center justify-between gap-2 px-3 py-2 text-left text-sm'>
-                    <span className='min-w-0 truncate font-mono text-xs'>
-                      {t('FunASR Speech Recognition')}
-                    </span>
-                    <Badge variant='outline' className='shrink-0'>
-                      {t('WebSocket')}
-                    </Badge>
-                  </summary>
-                  <div className='border-t p-3'>
-                    <FunasrWebSocketDemo />
-                  </div>
-                </details>
-              </div>
             </CardContent>
           </Card>
 
@@ -356,6 +328,25 @@ export function AvailableModels() {
                 >
                   <CodeBlockCopyButton />
                 </CodeBlock>
+              </div>
+
+              <div className='border-t pt-5'>
+                <div className='mb-3 flex flex-wrap items-start justify-between gap-3'>
+                  <div className='min-w-0'>
+                    <h3 className='text-sm font-medium'>
+                      {t('FunASR Speech Recognition')}
+                    </h3>
+                    <p className='text-muted-foreground text-xs'>
+                      {t(
+                        'Real-time speech recognition with streaming transcription over WebSocket.'
+                      )}
+                    </p>
+                  </div>
+                  <Badge variant='outline' className='shrink-0'>
+                    {t('WebSocket')}
+                  </Badge>
+                </div>
+                <FunasrWebSocketDemo />
               </div>
             </CardContent>
           </Card>
