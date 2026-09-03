@@ -72,6 +72,8 @@ const EXAMPLE_TABS = [
   { id: 'javascript', label: 'JavaScript' },
 ] as const
 
+const FUNASR_MODEL_NAME = 'FunASR Speech Recognition'
+
 export function AvailableModels() {
   const { t } = useTranslation()
   const [filter, setFilter] = useState('')
@@ -86,16 +88,24 @@ export function AvailableModels() {
     () => normalizeAvailableModels(modelsQuery.data?.data ?? []),
     [modelsQuery.data]
   )
+  const availableModels = useMemo(
+    () =>
+      models.includes(FUNASR_MODEL_NAME)
+        ? models
+        : [...models, FUNASR_MODEL_NAME],
+    [models]
+  )
   const filteredModels = useMemo(() => {
     const normalizedFilter = filter.trim().toLowerCase()
-    if (!normalizedFilter) return models
-    return models.filter((model) =>
+    if (!normalizedFilter) return availableModels
+    return availableModels.filter((model) =>
       model.toLowerCase().includes(normalizedFilter)
     )
-  }, [filter, models])
-  const activeModel = models.includes(selectedModel)
+  }, [availableModels, filter])
+  const activeModel = availableModels.includes(selectedModel)
     ? selectedModel
-    : (models[0] ?? '')
+    : (availableModels[0] ?? '')
+  const isFunasrModel = activeModel === FUNASR_MODEL_NAME
   const gatewayBaseUrl =
     typeof window === 'undefined'
       ? 'https://your-gateway.example.com'
@@ -110,11 +120,11 @@ export function AvailableModels() {
     [activeModel, chatEndpoint]
   )
   const emptyTitle =
-    models.length === 0
+    availableModels.length === 0
       ? t('No available models')
       : t('No models match your search')
   const emptyDescription =
-    models.length === 0
+    availableModels.length === 0
       ? t('Ask an administrator to enable a model for your group.')
       : t('Try a different search term.')
 
@@ -212,7 +222,7 @@ export function AvailableModels() {
                   </CardDescription>
                 </div>
                 <Badge variant='secondary' className='shrink-0'>
-                  {t('{{count}} models', { count: models.length })}
+                  {t('{{count}} models', { count: availableModels.length })}
                 </Badge>
               </div>
               <div className='relative pt-1'>
@@ -235,13 +245,22 @@ export function AvailableModels() {
             <CardHeader className='border-b'>
               <CardTitle>{t('How to use a model')}</CardTitle>
               <CardDescription>
-                {t(
-                  'Use an active API key with the OpenAI-compatible endpoint.'
-                )}
+                {isFunasrModel
+                  ? t(
+                      'Real-time speech recognition with streaming transcription over WebSocket.'
+                    )
+                  : t(
+                      'Use an active API key with the OpenAI-compatible endpoint.'
+                    )}
               </CardDescription>
             </CardHeader>
             <CardContent className='space-y-5 pt-1'>
-              <div className='grid gap-3 sm:grid-cols-2'>
+              <div
+                className={cn(
+                  'grid gap-3',
+                  !isFunasrModel && 'sm:grid-cols-2'
+                )}
+              >
                 <div className='bg-muted/35 min-w-0 rounded-lg border p-3'>
                   <div className='text-muted-foreground mb-1 text-xs'>
                     {t('Selected model')}
@@ -253,82 +272,90 @@ export function AvailableModels() {
                     {activeModel || t('No available models')}
                   </div>
                 </div>
-                <div className='bg-muted/35 min-w-0 rounded-lg border p-3'>
-                  <div className='text-muted-foreground mb-1 text-xs'>
-                    {t('API endpoint')}
+                {!isFunasrModel && (
+                  <div className='bg-muted/35 min-w-0 rounded-lg border p-3'>
+                    <div className='text-muted-foreground mb-1 text-xs'>
+                      {t('API endpoint')}
+                    </div>
+                    <div
+                      className='truncate font-mono text-sm'
+                      title={apiExampleEndpoint.url}
+                    >
+                      {apiExampleEndpoint.url.replace(gatewayBaseUrl, '')}
+                    </div>
                   </div>
-                  <div
-                    className='truncate font-mono text-sm'
-                    title={apiExampleEndpoint.url}
+                )}
+              </div>
+
+              {!isFunasrModel && (
+                <div className='flex flex-wrap items-center gap-2 text-sm'>
+                  <KeyRound
+                    className='text-muted-foreground size-4'
+                    aria-hidden='true'
+                  />
+                  <span className='text-muted-foreground'>
+                    {t('Need an API key?')}
+                  </span>
+                  <Link
+                    to='/keys'
+                    className='text-primary inline-flex items-center font-medium hover:underline'
                   >
-                    {apiExampleEndpoint.url.replace(gatewayBaseUrl, '')}
-                  </div>
+                    {t('Manage API Keys')}
+                  </Link>
                 </div>
-              </div>
+              )}
 
-              <div className='flex flex-wrap items-center gap-2 text-sm'>
-                <KeyRound
-                  className='text-muted-foreground size-4'
-                  aria-hidden='true'
-                />
-                <span className='text-muted-foreground'>
-                  {t('Need an API key?')}
-                </span>
-                <Link
-                  to='/keys'
-                  className='text-primary inline-flex items-center font-medium hover:underline'
-                >
-                  {t('Manage API Keys')}
-                </Link>
-              </div>
-
-              <div>
-                <div className='mb-2 flex items-center justify-between gap-3'>
-                  <div>
-                    <h3 className='text-sm font-medium'>
-                      {t('Request examples')}
-                    </h3>
-                    <p className='text-muted-foreground text-xs'>
-                      {t('Replace sk-... with an active API key.')}
-                    </p>
+              {!isFunasrModel && (
+                <div>
+                  <div className='mb-2 flex items-center justify-between gap-3'>
+                    <div>
+                      <h3 className='text-sm font-medium'>
+                        {t('Request examples')}
+                      </h3>
+                      <p className='text-muted-foreground text-xs'>
+                        {t('Replace sk-... with an active API key.')}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <Tabs defaultValue='curl'>
-                  <TabsList className='w-full sm:w-fit'>
-                    {EXAMPLE_TABS.map((tab) => (
-                      <TabsTrigger key={tab.id} value={tab.id}>
-                        {tab.label}
-                      </TabsTrigger>
+                  <Tabs defaultValue='curl'>
+                    <TabsList className='w-full sm:w-fit'>
+                      {EXAMPLE_TABS.map((tab) => (
+                        <TabsTrigger key={tab.id} value={tab.id}>
+                          {tab.label}
+                        </TabsTrigger>
+                      ))}
+                    </TabsList>
+                    {examples.map((example) => (
+                      <TabsContent key={example.id} value={example.id}>
+                        <CodeBlock
+                          code={example.code}
+                          language={example.language}
+                          showToolbar
+                          title={example.language}
+                        >
+                          <CodeBlockCopyButton />
+                        </CodeBlock>
+                      </TabsContent>
                     ))}
-                  </TabsList>
-                  {examples.map((example) => (
-                    <TabsContent key={example.id} value={example.id}>
-                      <CodeBlock
-                        code={example.code}
-                        language={example.language}
-                        showToolbar
-                        title={example.language}
-                      >
-                        <CodeBlockCopyButton />
-                      </CodeBlock>
-                    </TabsContent>
-                  ))}
-                </Tabs>
-              </div>
+                  </Tabs>
+                </div>
+              )}
 
-              <div>
-                <h3 className='text-sm font-medium'>
-                  {t('List models through the API')}
-                </h3>
-                <CodeBlock
-                  code={`curl ${gatewayBaseUrl}/v1/models \\\n  -H "Authorization: Bearer sk-..."`}
-                  language='bash'
-                  showToolbar
-                  title={t('Model list endpoint')}
-                >
-                  <CodeBlockCopyButton />
-                </CodeBlock>
-              </div>
+              {!isFunasrModel && (
+                <div>
+                  <h3 className='text-sm font-medium'>
+                    {t('List models through the API')}
+                  </h3>
+                  <CodeBlock
+                    code={`curl ${gatewayBaseUrl}/v1/models \\\n  -H "Authorization: Bearer sk-..."`}
+                    language='bash'
+                    showToolbar
+                    title={t('Model list endpoint')}
+                  >
+                    <CodeBlockCopyButton />
+                  </CodeBlock>
+                </div>
+              )}
 
               <div className='border-t pt-5'>
                 <div className='mb-3 flex flex-wrap items-start justify-between gap-3'>
