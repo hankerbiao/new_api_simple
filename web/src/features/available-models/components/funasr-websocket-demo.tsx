@@ -25,7 +25,7 @@ import {
 } from '@/components/ai-elements/code-block'
 import { CardDescription } from '@/components/ui/card'
 
-const FUNASR_WEBSOCKET_EXAMPLE = `const ws = new WebSocket('wss://your-funasr-endpoint')
+const FUNASR_WEBSOCKET_EXAMPLE = `const ws = new WebSocket('ws://10.17.150.235:10095')
 
 ws.addEventListener('open', () => {
   console.log('connected')

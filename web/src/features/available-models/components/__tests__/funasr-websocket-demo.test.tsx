@@ -30,7 +30,7 @@ describe('FunASR WebSocket demo', () => {
         'FunASR accepts a streaming PCM16 audio buffer and returns transcription text in each WebSocket message.'
       )
     ).toBeInTheDocument()
-    expect(screen.getByText('const ws = new WebSocket(\'wss://your-funasr-endpoint\')')).toBeInTheDocument()
+    expect(screen.getByText('const ws = new WebSocket(\'ws://10.17.150.235:10095\')')).toBeInTheDocument()
     expect(screen.getByText('ws.send(JSON.stringify({ type: \'end\' }))')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Start recognition' })).not.toBeInTheDocument()
     expect(screen.queryByRole('button', { name: 'Stop recognition' })).not.toBeInTheDocument()
